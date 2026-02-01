@@ -8,6 +8,7 @@ import com.jis.training.domain.port.out.PersistencePort;
 import com.jis.training.domain.port.out.QuestionRepositoryPort;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -16,16 +17,31 @@ import java.util.stream.Collectors;
 public class QuestionService extends GenericCrudService<Question, Long> implements GenerateQuizUseCase {
 
     private final QuestionRepositoryPort questionRepositoryPort;
+    private final AnswerService answerService;
 
     public QuestionService(
             @Qualifier("questionPersistenceAdapter") PersistencePort<Question, Long> persistencePort,
-            QuestionRepositoryPort questionRepositoryPort) {
+            QuestionRepositoryPort questionRepositoryPort,
+            AnswerService answerService) {
         super(persistencePort);
         this.questionRepositoryPort = questionRepositoryPort;
+        this.answerService = answerService;
     }
 
     public List<Question> findByTopicId(Long topicId) {
         return questionRepositoryPort.findByTopicId(topicId);
+    }
+
+    @Transactional
+    public Question createWithAnswers(Question question, List<Answer> answers) {
+        Question savedQuestion = create(question);
+
+        for (Answer answer : answers) {
+            answer.setQuestion(savedQuestion);
+            answerService.create(answer);
+        }
+
+        return savedQuestion;
     }
 
     @Override

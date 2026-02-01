@@ -1,8 +1,11 @@
 package com.jis.training.infrastructure.adapter.in.rest;
 
 import com.jis.training.application.service.QuestionService;
+import com.jis.training.domain.model.Answer;
 import com.jis.training.domain.model.Question;
 import com.jis.training.domain.model.QuestionWithAnswers;
+import com.jis.training.domain.model.Topic;
+import com.jis.training.infrastructure.adapter.in.rest.dto.CreateQuestionRequest;
 import com.jis.training.infrastructure.adapter.in.rest.dto.GenerateQuizRequest;
 import com.jis.training.infrastructure.adapter.in.rest.dto.GenerateQuizResponse;
 import com.jis.training.infrastructure.adapter.in.rest.mapper.QuestionDtoMapper;
@@ -39,9 +42,26 @@ public class QuestionController {
     }
 
     @PostMapping
-    @Operation(summary = "Crear pregunta")
-    public Question create(@RequestBody Question question) {
-        return service.create(question);
+    @Operation(summary = "Crear pregunta con respuestas")
+    public Question create(@Valid @RequestBody CreateQuestionRequest request) {
+        Question question = new Question();
+        question.setQuestionText(request.questionText());
+
+        Topic topic = new Topic();
+        topic.setId(request.topic().id());
+        question.setTopic(topic);
+
+        List<Answer> answers = request.answers().stream()
+                .map(answerRequest -> {
+                    Answer answer = new Answer();
+                    answer.setAnswerText(answerRequest.answerText());
+                    answer.setCorrect(answerRequest.isCorrect());
+                    answer.setExplanation(answerRequest.explanation());
+                    return answer;
+                })
+                .toList();
+
+        return service.createWithAnswers(question, answers);
     }
 
     @PutMapping("/{id}")
