@@ -49,4 +49,10 @@ public class AnswerController {
     public void delete(@PathVariable Long id) {
         service.delete(id);
     }
+
+    @GetMapping("/by-question/{questionId}")
+    @Operation(summary = "Obtener respuestas por pregunta", description = "Devuelve todas las respuestas asociadas a una pregunta")
+    public List<Answer> getByQuestionId(@PathVariable Long questionId) {
+        return service.findByQuestionId(questionId);
+    }
 }

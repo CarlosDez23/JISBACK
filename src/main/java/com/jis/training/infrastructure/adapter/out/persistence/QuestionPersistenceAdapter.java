@@ -56,6 +56,13 @@ public class QuestionPersistenceAdapter implements PersistencePort<Question, Lon
     }
 
     @Override
+    public List<Question> findByTopicId(Long topicId) {
+        return repository.findByTopicId(topicId).stream()
+                .map(mapper::toDomain)
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public List<Answer> findAnswersByQuestionIds(List<Long> questionIds) {
         return answerRepository.findByQuestionIdIn(questionIds).stream()
                 .map(answerMapper::toDomain)

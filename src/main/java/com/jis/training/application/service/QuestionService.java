@@ -24,6 +24,10 @@ public class QuestionService extends GenericCrudService<Question, Long> implemen
         this.questionRepositoryPort = questionRepositoryPort;
     }
 
+    public List<Question> findByTopicId(Long topicId) {
+        return questionRepositoryPort.findByTopicId(topicId);
+    }
+
     @Override
     public List<QuestionWithAnswers> generateQuiz(List<Long> topicIds, int numberOfQuestions) {
         List<Question> allQuestions = questionRepositoryPort.findByTopicIds(topicIds);

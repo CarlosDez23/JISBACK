@@ -72,4 +72,10 @@ public class QuestionController {
 
         return ResponseEntity.ok(response);
     }
+
+    @GetMapping("/by-topic/{topicId}")
+    @Operation(summary = "Obtener preguntas por tema", description = "Devuelve todas las preguntas que pertenecen a un topic")
+    public List<Question> getByTopicId(@PathVariable Long topicId) {
+        return service.findByTopicId(topicId);
+    }
 }

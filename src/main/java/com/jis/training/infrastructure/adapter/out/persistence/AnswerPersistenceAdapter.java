@@ -1,6 +1,7 @@
 package com.jis.training.infrastructure.adapter.out.persistence;
 
 import com.jis.training.domain.model.Answer;
+import com.jis.training.domain.port.out.AnswerRepositoryPort;
 import com.jis.training.domain.port.out.PersistencePort;
 import com.jis.training.infrastructure.adapter.out.persistence.entity.AnswerEntity;
 import com.jis.training.infrastructure.adapter.out.persistence.mapper.AnswerEntityMapper;
@@ -14,7 +15,7 @@ import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
-public class AnswerPersistenceAdapter implements PersistencePort<Answer, Long> {
+public class AnswerPersistenceAdapter implements PersistencePort<Answer, Long>, AnswerRepositoryPort {
 
     private final AnswerRepository repository;
     private final AnswerEntityMapper mapper;
@@ -40,5 +41,12 @@ public class AnswerPersistenceAdapter implements PersistencePort<Answer, Long> {
     @Override
     public void deleteById(Long id) {
         repository.deleteById(id);
+    }
+
+    @Override
+    public List<Answer> findByQuestionId(Long questionId) {
+        return repository.findByQuestionId(questionId).stream()
+                .map(mapper::toDomain)
+                .collect(Collectors.toList());
     }
 }
