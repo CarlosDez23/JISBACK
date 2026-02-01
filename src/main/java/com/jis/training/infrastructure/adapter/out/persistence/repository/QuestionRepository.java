@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface QuestionRepository extends JpaRepository<QuestionEntity, Long> {
     List<QuestionEntity> findByTopicIdIn(List<Long> topicIds);
+    long countByTopicId(Long topicId);
 }

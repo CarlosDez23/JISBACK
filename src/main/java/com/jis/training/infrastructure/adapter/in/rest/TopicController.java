@@ -52,10 +52,18 @@ public class TopicController {
     }
 
     @GetMapping("/by-materia/{materiaId}")
-    @Operation(summary = "Obtener topics por materia", description = "Devuelve id y nombre de los topics que pertenecen a una materia")
+    @Operation(summary = "Obtener topics por materia", description = "Devuelve id, nombre y número de preguntas de los topics que pertenecen a una materia")
     public List<TopicSummaryResponse> getByMateriaId(@PathVariable Long materiaId) {
         return service.findByMateriaId(materiaId).stream()
-                .map(t -> new TopicSummaryResponse(t.getId(), t.getTopicName()))
+                .map(t -> new TopicSummaryResponse(t.getId(), t.getTopicName(), service.countQuestionsByTopicId(t.getId())))
                 .toList();
+    }
+
+    @GetMapping("/{id}/questions/count")
+    @Operation(summary = "Obtener número de preguntas de un tema", description = "Devuelve el número total de preguntas asociadas a un topic")
+    public ResponseEntity<Long> getQuestionsCount(@PathVariable Long id) {
+        return service.getById(id)
+                .map(topic -> ResponseEntity.ok(service.countQuestionsByTopicId(id)))
+                .orElse(ResponseEntity.notFound().build());
     }
 }

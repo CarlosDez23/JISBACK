@@ -61,4 +61,9 @@ public class QuestionPersistenceAdapter implements PersistencePort<Question, Lon
                 .map(answerMapper::toDomain)
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public long countByTopicId(Long topicId) {
+        return repository.countByTopicId(topicId);
+    }
 }
