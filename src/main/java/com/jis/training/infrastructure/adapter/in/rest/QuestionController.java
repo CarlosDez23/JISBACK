@@ -34,9 +34,9 @@ public class QuestionController {
     }
 
     @GetMapping("/{id}")
-    @Operation(summary = "Obtener pregunta por ID")
-    public ResponseEntity<Question> getById(@PathVariable Long id) {
-        return service.getById(id)
+    @Operation(summary = "Obtener pregunta por ID con sus respuestas")
+    public ResponseEntity<QuestionWithAnswers> getById(@PathVariable Long id) {
+        return service.getByIdWithAnswers(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
@@ -97,5 +97,11 @@ public class QuestionController {
     @Operation(summary = "Obtener preguntas por tema", description = "Devuelve todas las preguntas que pertenecen a un topic")
     public List<Question> getByTopicId(@PathVariable Long topicId) {
         return service.findByTopicId(topicId);
+    }
+
+    @GetMapping("/by-materia/{materiaId}")
+    @Operation(summary = "Obtener preguntas por materia", description = "Devuelve todas las preguntas de todos los topics de una materia")
+    public List<Question> getByMateriaId(@PathVariable Long materiaId) {
+        return service.findByMateriaId(materiaId);
     }
 }

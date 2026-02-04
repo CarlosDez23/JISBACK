@@ -1,9 +1,14 @@
 package com.jis.training.infrastructure.adapter.in.rest;
 
 import com.jis.training.application.service.SimulacroService;
+import com.jis.training.domain.model.Comunidad;
+import com.jis.training.domain.model.Materia;
 import com.jis.training.domain.model.Simulacro;
+import com.jis.training.infrastructure.adapter.in.rest.dto.CreateSimulacroRequest;
+import com.jis.training.infrastructure.adapter.in.rest.dto.SimulacroResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,9 +24,9 @@ public class SimulacroController {
     private final SimulacroService service;
 
     @GetMapping
-    @Operation(summary = "Listar todos los simulacros")
-    public List<Simulacro> getAll() {
-        return service.getAll();
+    @Operation(summary = "Listar todos los simulacros con número de preguntas")
+    public List<SimulacroResponse> getAll() {
+        return service.getAllWithPreguntaCount();
     }
 
     @GetMapping("/{id}")
@@ -33,9 +38,24 @@ public class SimulacroController {
     }
 
     @PostMapping
-    @Operation(summary = "Crear simulacro")
-    public Simulacro create(@RequestBody Simulacro simulacro) {
-        return service.create(simulacro);
+    @Operation(summary = "Crear simulacro con preguntas")
+    public Simulacro create(@Valid @RequestBody CreateSimulacroRequest request) {
+        Simulacro simulacro = new Simulacro();
+        simulacro.setNombreSimulacro(request.nombreSimulacro());
+
+        if (request.comunidadId() != null) {
+            Comunidad comunidad = new Comunidad();
+            comunidad.setId(request.comunidadId().intValue());
+            simulacro.setComunidad(comunidad);
+        }
+
+        if (request.materiaId() != null) {
+            Materia materia = new Materia();
+            materia.setId(request.materiaId().intValue());
+            simulacro.setMateria(materia);
+        }
+
+        return service.createWithPreguntas(simulacro, request.preguntaIds());
     }
 
     @PutMapping("/{id}")
@@ -45,8 +65,8 @@ public class SimulacroController {
     }
 
     @DeleteMapping("/{id}")
-    @Operation(summary = "Eliminar simulacro")
+    @Operation(summary = "Eliminar simulacro", description = "Elimina el simulacro y todas sus preguntas asociadas")
     public void delete(@PathVariable Long id) {
-        service.delete(id);
+        service.deleteWithPreguntas(id);
     }
 }

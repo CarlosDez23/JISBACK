@@ -3,9 +3,11 @@ package com.jis.training.application.service;
 import com.jis.training.domain.model.Answer;
 import com.jis.training.domain.model.Question;
 import com.jis.training.domain.model.QuestionWithAnswers;
+import com.jis.training.domain.model.Topic;
 import com.jis.training.domain.port.in.GenerateQuizUseCase;
 import com.jis.training.domain.port.out.PersistencePort;
 import com.jis.training.domain.port.out.QuestionRepositoryPort;
+import com.jis.training.domain.port.out.TopicRepositoryPort;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,19 +19,46 @@ import java.util.stream.Collectors;
 public class QuestionService extends GenericCrudService<Question, Long> implements GenerateQuizUseCase {
 
     private final QuestionRepositoryPort questionRepositoryPort;
+    private final TopicRepositoryPort topicRepositoryPort;
     private final AnswerService answerService;
 
     public QuestionService(
             @Qualifier("questionPersistenceAdapter") PersistencePort<Question, Long> persistencePort,
             QuestionRepositoryPort questionRepositoryPort,
+            TopicRepositoryPort topicRepositoryPort,
             AnswerService answerService) {
         super(persistencePort);
         this.questionRepositoryPort = questionRepositoryPort;
+        this.topicRepositoryPort = topicRepositoryPort;
         this.answerService = answerService;
     }
 
     public List<Question> findByTopicId(Long topicId) {
         return questionRepositoryPort.findByTopicId(topicId);
+    }
+
+    public Optional<QuestionWithAnswers> getByIdWithAnswers(Long id) {
+        return getById(id).map(question -> {
+            List<Answer> answers = answerService.findByQuestionId(id);
+            return new QuestionWithAnswers(
+                    question.getId(),
+                    question.getQuestionText(),
+                    question.getTopic().getId(),
+                    question.getTopic().getTopicName(),
+                    answers
+            );
+        });
+    }
+
+    public List<Question> findByMateriaId(Long materiaId) {
+        List<Topic> topics = topicRepositoryPort.findByMateriaId(materiaId);
+        if (topics.isEmpty()) {
+            return Collections.emptyList();
+        }
+        List<Long> topicIds = topics.stream()
+                .map(Topic::getId)
+                .toList();
+        return questionRepositoryPort.findByTopicIds(topicIds);
     }
 
     @Transactional

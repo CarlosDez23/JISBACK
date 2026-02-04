@@ -44,9 +44,15 @@ public class SimulacroPreguntaController {
         return service.update(id, simulacroPregunta);
     }
 
-    @DeleteMapping("/{id}")
-    @Operation(summary = "Eliminar pregunta de simulacro")
-    public void delete(@PathVariable Long id) {
-        service.delete(id);
+    @DeleteMapping("/simulacro/{simulacroId}/pregunta/{preguntaId}")
+    @Operation(summary = "Eliminar pregunta de un simulacro", description = "Elimina una pregunta específica de un simulacro")
+    public void delete(@PathVariable Long simulacroId, @PathVariable Long preguntaId) {
+        service.deleteBySimulacroIdAndPreguntaId(simulacroId, preguntaId);
+    }
+
+    @GetMapping("/by-simulacro/{simulacroId}")
+    @Operation(summary = "Obtener preguntas por simulacro", description = "Devuelve todas las preguntas que conforman un simulacro")
+    public List<SimulacroPregunta> getBySimulacroId(@PathVariable Long simulacroId) {
+        return service.findBySimulacroId(simulacroId);
     }
 }
