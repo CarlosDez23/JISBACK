@@ -61,6 +61,28 @@ public class QuestionService extends GenericCrudService<Question, Long> implemen
         return questionRepositoryPort.findByTopicIds(topicIds);
     }
 
+    public List<Long> selectRandomQuestionIds(Map<Long, Integer> preguntasPorTema) {
+        List<Long> selectedIds = new ArrayList<>();
+        Random random = new Random();
+
+        for (Map.Entry<Long, Integer> entry : preguntasPorTema.entrySet()) {
+            Long topicId = entry.getKey();
+            int cantidad = entry.getValue();
+
+            List<Question> topicQuestions = questionRepositoryPort.findByTopicId(topicId);
+
+            List<Question> shuffled = new ArrayList<>(topicQuestions);
+            Collections.shuffle(shuffled, random);
+
+            int toSelect = Math.min(cantidad, shuffled.size());
+            for (int i = 0; i < toSelect; i++) {
+                selectedIds.add(shuffled.get(i).getId());
+            }
+        }
+
+        return selectedIds;
+    }
+
     @Transactional
     public Question createWithAnswers(Question question, List<Answer> answers) {
         Question savedQuestion = create(question);

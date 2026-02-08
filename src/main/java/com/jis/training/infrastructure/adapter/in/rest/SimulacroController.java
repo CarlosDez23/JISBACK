@@ -5,6 +5,7 @@ import com.jis.training.domain.model.Comunidad;
 import com.jis.training.domain.model.Materia;
 import com.jis.training.domain.model.Simulacro;
 import com.jis.training.infrastructure.adapter.in.rest.dto.CreateSimulacroRequest;
+import com.jis.training.infrastructure.adapter.in.rest.dto.GenerateSimulacroRequest;
 import com.jis.training.infrastructure.adapter.in.rest.dto.SimulacroResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -68,5 +69,27 @@ public class SimulacroController {
     @Operation(summary = "Eliminar simulacro", description = "Elimina el simulacro y todas sus preguntas asociadas")
     public void delete(@PathVariable Long id) {
         service.deleteWithPreguntas(id);
+    }
+
+    @PostMapping("/generate")
+    @Operation(summary = "Generar simulacro con preguntas aleatorias",
+               description = "Crea un simulacro seleccionando aleatoriamente preguntas de cada tema según la cantidad especificada")
+    public Simulacro generate(@Valid @RequestBody GenerateSimulacroRequest request) {
+        Simulacro simulacro = new Simulacro();
+        simulacro.setNombreSimulacro(request.nombreSimulacro());
+
+        if (request.comunidadId() != null) {
+            Comunidad comunidad = new Comunidad();
+            comunidad.setId(request.comunidadId().intValue());
+            simulacro.setComunidad(comunidad);
+        }
+
+        if (request.materiaId() != null) {
+            Materia materia = new Materia();
+            materia.setId(request.materiaId().intValue());
+            simulacro.setMateria(materia);
+        }
+
+        return service.generateSimulacro(simulacro, request.preguntasPorTema());
     }
 }
