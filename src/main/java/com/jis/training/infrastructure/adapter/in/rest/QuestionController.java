@@ -1,6 +1,7 @@
 package com.jis.training.infrastructure.adapter.in.rest;
 
 import com.jis.training.application.service.QuestionService;
+import com.jis.training.application.service.QuizPdfService;
 import com.jis.training.domain.model.Answer;
 import com.jis.training.domain.model.Question;
 import com.jis.training.domain.model.QuestionWithAnswers;
@@ -16,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -26,6 +28,7 @@ public class QuestionController {
 
     private final QuestionService service;
     private final QuestionDtoMapper questionDtoMapper;
+    private final QuizPdfService quizPdfService;
 
     @GetMapping
     @Operation(summary = "Listar todas las preguntas")
@@ -77,17 +80,20 @@ public class QuestionController {
     }
 
     @PostMapping("/generate-quiz")
-    @Operation(summary = "Generar quiz de preguntas", description = "Genera un quiz con preguntas distribuidas equitativamente entre los topics especificados")
-    public ResponseEntity<GenerateQuizResponse> generateQuiz(@Valid @RequestBody GenerateQuizRequest request) {
+    @Operation(summary = "Generar quiz de preguntas", description = "Genera un quiz con preguntas distribuidas equitativamente entre los topics especificados, incluyendo un PDF imprimible")
+    public ResponseEntity<GenerateQuizResponse> generateQuiz(@Valid @RequestBody GenerateQuizRequest request) throws IOException {
         List<QuestionWithAnswers> questions = service.generateQuiz(
                 request.topicIds(),
                 request.numberOfQuestions()
         );
 
+        String pdfBase64 = quizPdfService.generateQuizPdf(questions);
+
         GenerateQuizResponse response = new GenerateQuizResponse(
                 questions.size(),
                 request.topicIds().size(),
-                questionDtoMapper.toQuestionWithAnswersResponseList(questions)
+                questionDtoMapper.toQuestionWithAnswersResponseList(questions),
+                pdfBase64
         );
 
         return ResponseEntity.ok(response);

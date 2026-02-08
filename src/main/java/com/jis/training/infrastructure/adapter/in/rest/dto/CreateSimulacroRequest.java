@@ -13,6 +13,8 @@ public record CreateSimulacroRequest(
 
         Long materiaId,
 
+        Integer tiempoLimiteSegundos,
+
         @NotEmpty(message = "preguntaIds cannot be empty")
         List<Long> preguntaIds
 ) {}

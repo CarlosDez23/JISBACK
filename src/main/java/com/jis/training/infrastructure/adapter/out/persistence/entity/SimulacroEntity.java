@@ -21,4 +21,7 @@ public class SimulacroEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "materia")
     private MateriaEntity materia;
+
+    @Column(name = "tiempo_limite_segundos")
+    private Integer tiempoLimiteSegundos;
 }

@@ -8,4 +8,5 @@ public class Simulacro {
     private String nombreSimulacro;
     private Comunidad comunidad;
     private Materia materia;
+    private Integer tiempoLimiteSegundos;
 }

@@ -8,5 +8,6 @@ public record SimulacroResponse(
         String nombreSimulacro,
         Comunidad comunidad,
         Materia materia,
+        Integer tiempoLimiteSegundos,
         long totalPreguntas
 ) {}

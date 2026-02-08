@@ -13,6 +13,8 @@ public record GenerateSimulacroRequest(
 
         Long materiaId,
 
+        Integer tiempoLimiteSegundos,
+
         @NotEmpty(message = "preguntasPorTema cannot be empty")
         Map<Long, Integer> preguntasPorTema
 ) {}

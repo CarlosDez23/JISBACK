@@ -43,6 +43,7 @@ public class SimulacroController {
     public Simulacro create(@Valid @RequestBody CreateSimulacroRequest request) {
         Simulacro simulacro = new Simulacro();
         simulacro.setNombreSimulacro(request.nombreSimulacro());
+        simulacro.setTiempoLimiteSegundos(request.tiempoLimiteSegundos());
 
         if (request.comunidadId() != null) {
             Comunidad comunidad = new Comunidad();
@@ -77,6 +78,7 @@ public class SimulacroController {
     public Simulacro generate(@Valid @RequestBody GenerateSimulacroRequest request) {
         Simulacro simulacro = new Simulacro();
         simulacro.setNombreSimulacro(request.nombreSimulacro());
+        simulacro.setTiempoLimiteSegundos(request.tiempoLimiteSegundos());
 
         if (request.comunidadId() != null) {
             Comunidad comunidad = new Comunidad();

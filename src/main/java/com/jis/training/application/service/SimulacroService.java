@@ -35,6 +35,7 @@ public class SimulacroService extends GenericCrudService<Simulacro, Long> {
                         simulacro.getNombreSimulacro(),
                         simulacro.getComunidad(),
                         simulacro.getMateria(),
+                        simulacro.getTiempoLimiteSegundos(),
                         simulacroPreguntaService.countBySimulacroId(simulacro.getId())
                 ))
                 .toList();
