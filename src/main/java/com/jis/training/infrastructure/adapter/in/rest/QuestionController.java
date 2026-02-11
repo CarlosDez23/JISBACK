@@ -9,6 +9,7 @@ import com.jis.training.domain.model.Topic;
 import com.jis.training.infrastructure.adapter.in.rest.dto.CreateQuestionRequest;
 import com.jis.training.infrastructure.adapter.in.rest.dto.GenerateQuizRequest;
 import com.jis.training.infrastructure.adapter.in.rest.dto.GenerateQuizResponse;
+import com.jis.training.infrastructure.adapter.in.rest.dto.UpdateQuestionRequest;
 import com.jis.training.infrastructure.adapter.in.rest.mapper.QuestionDtoMapper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -68,9 +69,22 @@ public class QuestionController {
     }
 
     @PutMapping("/{id}")
-    @Operation(summary = "Actualizar pregunta")
-    public Question update(@PathVariable Long id, @RequestBody Question question) {
-        return service.update(id, question);
+    @Operation(summary = "Actualizar pregunta con respuestas")
+    public ResponseEntity<QuestionWithAnswers> update(@PathVariable Long id, @Valid @RequestBody UpdateQuestionRequest request) {
+        List<Answer> answers = request.answers().stream()
+                .map(answerRequest -> {
+                    Answer answer = new Answer();
+                    answer.setId(answerRequest.id());
+                    answer.setAnswerText(answerRequest.answerText());
+                    answer.setCorrect(answerRequest.isCorrect());
+                    answer.setExplanation(answerRequest.explanation());
+                    return answer;
+                })
+                .toList();
+
+        return service.updateWithAnswers(id, request.questionText(), answers)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
     @DeleteMapping("/{id}")

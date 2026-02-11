@@ -20,7 +20,8 @@ import java.util.List;
 public class QuizPdfService {
 
     private final byte[] logoBytes;
-    private static final String WATERMARK_TEXT = "Este test es propiedad el grupo de formación JIS su distribución está prohibida";
+    private static final String WATERMARK_LINE1 = "Este test es propiedad del grupo de formación JIS";
+    private static final String WATERMARK_LINE2 = "Su distribución está prohibida";
 
     public QuizPdfService() throws IOException {
         this.logoBytes = new ClassPathResource("assets/logojis.png").getContentAsByteArray();
@@ -97,11 +98,19 @@ public class QuizPdfService {
             // 1. Marca de Agua (se dibuja DEBAJO del contenido)
             PdfContentByte cbUnder = writer.getDirectContentUnder();
             cbUnder.saveState();
+            PdfGState gs = new PdfGState();
+            gs.setFillOpacity(0.30f);
+            cbUnder.setGState(gs);
+            cbUnder.setColorFill(new java.awt.Color(180, 180, 180));
             cbUnder.beginText();
-            cbUnder.setColorFill(new java.awt.Color(200, 200, 200, 45));
-            cbUnder.setFontAndSize(bf, 22);
-            cbUnder.showTextAligned(Element.ALIGN_CENTER, WATERMARK_TEXT,
-                    PageSize.A4.getWidth() / 2, PageSize.A4.getHeight() / 2, 45);
+            cbUnder.setFontAndSize(bf, 32);
+            float centerX = PageSize.A4.getWidth() / 2;
+            float centerY = PageSize.A4.getHeight() / 2;
+            float lineSpacing = 40;
+            cbUnder.showTextAligned(Element.ALIGN_CENTER, WATERMARK_LINE1,
+                    centerX, centerY + lineSpacing / 2, 45);
+            cbUnder.showTextAligned(Element.ALIGN_CENTER, WATERMARK_LINE2,
+                    centerX, centerY - lineSpacing / 2, 45);
             cbUnder.endText();
             cbUnder.restoreState();
 

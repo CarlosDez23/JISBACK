@@ -95,6 +95,27 @@ public class QuestionService extends GenericCrudService<Question, Long> implemen
         return savedQuestion;
     }
 
+    @Transactional
+    public Optional<QuestionWithAnswers> updateWithAnswers(Long questionId, String questionText, List<Answer> answers) {
+        return getById(questionId).map(existingQuestion -> {
+            existingQuestion.setQuestionText(questionText);
+            Question updatedQuestion = update(questionId, existingQuestion);
+
+            for (Answer answer : answers) {
+                answer.setQuestion(updatedQuestion);
+                answerService.update(answer.getId(), answer);
+            }
+
+            return new QuestionWithAnswers(
+                    updatedQuestion.getId(),
+                    updatedQuestion.getQuestionText(),
+                    updatedQuestion.getTopic().getId(),
+                    updatedQuestion.getTopic().getTopicName(),
+                    answers
+            );
+        });
+    }
+
     @Override
     public List<QuestionWithAnswers> generateQuiz(List<Long> topicIds, int numberOfQuestions) {
         List<Question> allQuestions = questionRepositoryPort.findByTopicIds(topicIds);
