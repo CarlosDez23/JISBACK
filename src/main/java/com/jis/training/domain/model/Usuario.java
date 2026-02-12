@@ -9,5 +9,7 @@ public class Usuario {
     private String apellidos;
     private String correoElectronico;
     private String userPassword;
+    private boolean isAdmin;
+    private boolean passwordChangeRequired;
     private Comunidad comunidad;
 }
