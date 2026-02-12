@@ -15,6 +15,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -101,13 +102,16 @@ public class QuestionController {
                 request.numberOfQuestions()
         );
 
-        String pdfBase64 = quizPdfService.generateQuizPdf(questions);
+        ImmutablePair<String, String> generatedContent = quizPdfService.generateQuizPdf(questions);
+        String pdfBase64 = generatedContent.getLeft();
+        String pdfBase64TestSolution = generatedContent.getRight();
 
         GenerateQuizResponse response = new GenerateQuizResponse(
                 questions.size(),
                 request.topicIds().size(),
                 questionDtoMapper.toQuestionWithAnswersResponseList(questions),
-                pdfBase64
+                pdfBase64,
+                pdfBase64TestSolution
         );
 
         return ResponseEntity.ok(response);

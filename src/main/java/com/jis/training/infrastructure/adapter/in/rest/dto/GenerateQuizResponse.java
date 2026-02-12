@@ -6,5 +6,6 @@ public record GenerateQuizResponse(
         int totalQuestions,
         int topicsCount,
         List<QuestionWithAnswersResponse> questions,
-        String pdfBase64
+        String pdfBase64,
+        String pdfBase64TestSolution
 ) {}

@@ -5,6 +5,7 @@ import com.lowagie.text.pdf.*;
 import com.jis.training.domain.model.Answer;
 import com.jis.training.domain.model.QuestionWithAnswers;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 
@@ -27,7 +28,7 @@ public class QuizPdfService {
         this.logoBytes = new ClassPathResource("assets/logojis.png").getContentAsByteArray();
     }
 
-    public String generateQuizPdf(List<QuestionWithAnswers> questions) {
+    public ImmutablePair<String, String> generateQuizPdf(List<QuestionWithAnswers> questions) {
         // Aumentamos el margen superior (tercer parámetro) a 150 para que el logo más grande tenga espacio
         Document document = new Document(PageSize.A4, 50, 50, 150, 50);
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -67,7 +68,79 @@ public class QuizPdfService {
             throw new RuntimeException("Error fatal al generar PDF", e);
         }
 
+        String solutionsPdf = generateSolutionsPdf(questions);
+        return new ImmutablePair<>(Base64.getEncoder().encodeToString(baos.toByteArray()), solutionsPdf);
+    }
+
+    private String generateSolutionsPdf(List<QuestionWithAnswers> questions) {
+        Document document = new Document(PageSize.A4, 50, 50, 50, 50);
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+
+        try {
+            PdfWriter.getInstance(document, baos);
+            document.open();
+
+            Font titleFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 16);
+            Font headerFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 12);
+            Font cellFont = FontFactory.getFont(FontFactory.HELVETICA, 11);
+
+            Paragraph title = new Paragraph("Soluciones del Test", titleFont);
+            title.setAlignment(Element.ALIGN_CENTER);
+            title.setSpacingAfter(20f);
+            document.add(title);
+
+            PdfPTable table = new PdfPTable(2);
+            table.setWidthPercentage(50);
+            table.setHorizontalAlignment(Element.ALIGN_CENTER);
+            table.setWidths(new float[]{1f, 2f});
+
+            PdfPCell headerNum = new PdfPCell(new Phrase("Nº", headerFont));
+            headerNum.setHorizontalAlignment(Element.ALIGN_CENTER);
+            headerNum.setPadding(8f);
+            headerNum.setBackgroundColor(new java.awt.Color(220, 220, 220));
+            table.addCell(headerNum);
+
+            PdfPCell headerResp = new PdfPCell(new Phrase("Respuesta", headerFont));
+            headerResp.setHorizontalAlignment(Element.ALIGN_CENTER);
+            headerResp.setPadding(8f);
+            headerResp.setBackgroundColor(new java.awt.Color(220, 220, 220));
+            table.addCell(headerResp);
+
+            int questionNumber = 1;
+            for (QuestionWithAnswers question : questions) {
+                String correctAnswer = findCorrectAnswerLabel(question.getAnswers());
+
+                PdfPCell numCell = new PdfPCell(new Phrase(String.valueOf(questionNumber), cellFont));
+                numCell.setHorizontalAlignment(Element.ALIGN_CENTER);
+                numCell.setPadding(6f);
+                table.addCell(numCell);
+
+                PdfPCell answerCell = new PdfPCell(new Phrase(correctAnswer, cellFont));
+                answerCell.setHorizontalAlignment(Element.ALIGN_CENTER);
+                answerCell.setPadding(6f);
+                table.addCell(answerCell);
+
+                questionNumber++;
+            }
+
+            document.add(table);
+            document.close();
+        } catch (Exception e) {
+            throw new RuntimeException("Error al generar PDF de soluciones", e);
+        }
+
         return Base64.getEncoder().encodeToString(baos.toByteArray());
+    }
+
+    private String findCorrectAnswerLabel(List<Answer> answers) {
+        char label = 'a';
+        for (Answer answer : answers) {
+            if (answer.isCorrect()) {
+                return String.valueOf(label);
+            }
+            label++;
+        }
+        return "-";
     }
 
     private static class PdfHeaderAndWatermark extends PdfPageEventHelper {
@@ -99,7 +172,7 @@ public class QuizPdfService {
             PdfContentByte cbUnder = writer.getDirectContentUnder();
             cbUnder.saveState();
             PdfGState gs = new PdfGState();
-            gs.setFillOpacity(0.30f);
+            gs.setFillOpacity(0.50f);
             cbUnder.setGState(gs);
             cbUnder.setColorFill(new java.awt.Color(180, 180, 180));
             cbUnder.beginText();
