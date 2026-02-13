@@ -20,10 +20,16 @@ public class UsuarioEntity {
     @Column(name = "correo_electronico", nullable = false, unique = true)
     private String correoElectronico;
 
-    @Column(name = "user_password", nullable = false)
+    @Column(name = "user_password")
     private String userPassword;
 
+    @Column(name = "is_admin", nullable = false)
+    private boolean isAdmin;
+
+    @Column(name = "password_change_required", nullable = false)
+    private boolean passwordChangeRequired = true;
+
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "comunidad_id", nullable = false)
+    @JoinColumn(name = "comunidad", nullable = false)
     private ComunidadEntity comunidad;
 }

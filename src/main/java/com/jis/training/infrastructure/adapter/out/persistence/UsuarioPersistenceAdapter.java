@@ -7,6 +7,8 @@ import com.jis.training.infrastructure.adapter.out.persistence.entity.UsuarioEnt
 import com.jis.training.infrastructure.adapter.out.persistence.mapper.UsuarioEntityMapper;
 import com.jis.training.infrastructure.adapter.out.persistence.repository.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -19,6 +21,7 @@ public class UsuarioPersistenceAdapter implements PersistencePort<Usuario, Long>
 
     private final UsuarioRepository repository;
     private final UsuarioEntityMapper mapper;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public List<Usuario> findAll() {
@@ -51,5 +54,17 @@ public class UsuarioPersistenceAdapter implements PersistencePort<Usuario, Long>
     @Override
     public boolean existsByCorreoElectronico(String correoElectronico) {
         return repository.existsByCorreoElectronico(correoElectronico);
+    }
+
+    @Override
+    public List<Usuario> findByComunidadId(Integer comunidadId) {
+        return repository.findByComunidadId(comunidadId).stream()
+                .map(mapper::toDomain)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public void updatePassword(Long id, String newPassword) {
+        repository.updatePasswordAndChangeRequired(id, newPassword, false);
     }
 }

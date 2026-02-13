@@ -1,9 +1,13 @@
 package com.jis.training.infrastructure.adapter.in.rest;
 
+import com.jis.training.application.service.ComunidadService;
 import com.jis.training.application.service.UsuarioService;
+import com.jis.training.domain.model.Comunidad;
 import com.jis.training.domain.model.Usuario;
+import com.jis.training.infrastructure.adapter.in.rest.dto.UpdateUsuarioRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,6 +21,7 @@ import java.util.List;
 public class UsuarioController {
 
     private final UsuarioService service;
+    private final ComunidadService comunidadService;
 
     @GetMapping
     @Operation(summary = "Listar todos los usuarios")
@@ -48,13 +53,32 @@ public class UsuarioController {
 
     @PutMapping("/{id}")
     @Operation(summary = "Actualizar usuario")
-    public Usuario update(@PathVariable Long id, @RequestBody Usuario usuario) {
-        return service.update(id, usuario);
+    public ResponseEntity<Usuario> update(@PathVariable Long id, @Valid @RequestBody UpdateUsuarioRequest request) {
+        Comunidad comunidad = comunidadService.getById(request.comunidadId()).orElse(null);
+        if (comunidad == null) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        Usuario usuario = new Usuario();
+        usuario.setId(id);
+        usuario.setNombre(request.nombre());
+        usuario.setApellidos(request.apellidos());
+        usuario.setCorreoElectronico(request.correoElectronico());
+        usuario.setAdmin(request.isAdmin());
+        usuario.setComunidad(comunidad);
+
+        return ResponseEntity.ok(service.update(id, usuario));
     }
 
     @DeleteMapping("/{id}")
     @Operation(summary = "Eliminar usuario")
     public void delete(@PathVariable Long id) {
         service.delete(id);
+    }
+
+    @GetMapping("/comunidad/{comunidadId}")
+    @Operation(summary = "Obtener usuarios por comunidad")
+    public List<Usuario> getByComunidadId(@PathVariable Integer comunidadId) {
+        return service.findByComunidadId(comunidadId);
     }
 }
