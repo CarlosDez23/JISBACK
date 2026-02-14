@@ -28,13 +28,13 @@ public class UserAnswerEntity {
     @Column(name = "is_correct", nullable = false)
     private boolean isCorrect;
 
-    @Column(name = "created_at", nullable = false)
-    private LocalDateTime createdAt;
+    @Column(name = "answered_at", nullable = false)
+    private LocalDateTime answeredAt;
 
     @PrePersist
     protected void onCreate() {
-        if (createdAt == null) {
-            createdAt = LocalDateTime.now();
+        if (answeredAt == null) {
+            answeredAt = LocalDateTime.now();
         }
     }
 }

@@ -9,12 +9,14 @@ import java.math.BigDecimal;
 @Entity
 @Immutable
 @Table(name = "stats_por_materia", schema = "jis_training")
+@IdClass(StatsPorMateriaId.class)
 @Data
 public class StatsPorMateriaEntity {
     @Id
     @Column(name = "usuario_id")
     private Long usuarioId;
 
+    @Id
     @Column(name = "materia_id")
     private Long materiaId;
 

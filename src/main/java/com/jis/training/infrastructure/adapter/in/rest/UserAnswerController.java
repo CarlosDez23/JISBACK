@@ -2,9 +2,13 @@ package com.jis.training.infrastructure.adapter.in.rest;
 
 import com.jis.training.application.service.UserAnswerService;
 import com.jis.training.domain.model.UserAnswer;
+import com.jis.training.infrastructure.adapter.in.rest.dto.SubmitTestRequest;
+import com.jis.training.infrastructure.adapter.in.rest.dto.SubmitTestResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -45,9 +49,21 @@ public class UserAnswerController {
     }
 
     @PostMapping
-    @Operation(summary = "Registrar respuesta de usuario")
+    @Operation(summary = "Registrar respuesta de usuario individual")
     public UserAnswer create(@RequestBody UserAnswer userAnswer) {
         return service.create(userAnswer);
+    }
+
+    @PostMapping("/submit-test")
+    @Operation(summary = "Enviar resultados de test completo",
+               description = "Guarda todas las respuestas de un test de forma asíncrona. " +
+                             "Devuelve 202 Accepted inmediatamente. Las respuestas se procesan en segundo plano.")
+    public ResponseEntity<SubmitTestResponse> submitTest(@Valid @RequestBody SubmitTestRequest request) {
+        service.processTestAsync(request);
+
+        return ResponseEntity
+                .status(HttpStatus.ACCEPTED)
+                .body(SubmitTestResponse.accepted(request.respuestas().size()));
     }
 
     @DeleteMapping("/{id}")
