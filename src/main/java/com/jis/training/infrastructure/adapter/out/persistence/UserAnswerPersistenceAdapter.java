@@ -56,4 +56,14 @@ public class UserAnswerPersistenceAdapter implements PersistencePort<UserAnswer,
                 .map(mapper::toDomain)
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public List<UserAnswer> saveAll(List<UserAnswer> answers) {
+        List<UserAnswerEntity> entities = answers.stream()
+                .map(mapper::toEntity)
+                .collect(Collectors.toList());
+        return repository.saveAll(entities).stream()
+                .map(mapper::toDomain)
+                .collect(Collectors.toList());
+    }
 }

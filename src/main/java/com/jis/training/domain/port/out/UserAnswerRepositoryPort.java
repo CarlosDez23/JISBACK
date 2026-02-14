@@ -7,4 +7,5 @@ import java.util.List;
 public interface UserAnswerRepositoryPort {
     List<UserAnswer> findByUsuarioId(Long usuarioId);
     List<UserAnswer> findByQuestionId(Long questionId);
+    List<UserAnswer> saveAll(List<UserAnswer> answers);
 }

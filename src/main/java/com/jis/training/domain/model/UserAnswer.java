@@ -11,5 +11,5 @@ public class UserAnswer {
     private Question question;
     private Answer answer;
     private boolean isCorrect;
-    private LocalDateTime createdAt;
+    private LocalDateTime answeredAt;
 }
