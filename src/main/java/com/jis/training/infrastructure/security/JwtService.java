@@ -16,11 +16,11 @@ import java.util.function.Function;
 @Service
 public class JwtService {
 
-    @Value("${jwt.secret:miClaveSecretaMuyLargaParaJWTQueDebeSerAlMenos256Bits}")
+    @Value("${jwt.secret}")
     private String secretKey;
 
-    @Value("${jwt.expiration:86400000}")
-    private long jwtExpiration; // 24 horas por defecto
+    @Value("${jwt.expiration}")
+    private long jwtExpiration;
 
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
