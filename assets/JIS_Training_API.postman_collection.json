@@ -827,6 +827,107 @@
           }
         }
       ]
+    },
+    {
+      "name": "Carga Masiva",
+      "item": [
+        {
+          "name": "Get Plantilla Usuarios",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/bulk/usuarios/plantilla", "host": ["{{baseUrl}}"], "path": ["api", "bulk", "usuarios", "plantilla"] }
+          }
+        },
+        {
+          "name": "Cargar Usuarios",
+          "request": {
+            "method": "POST",
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "file",
+                  "type": "file",
+                  "src": ""
+                }
+              ]
+            },
+            "url": { "raw": "{{baseUrl}}/api/bulk/usuarios", "host": ["{{baseUrl}}"], "path": ["api", "bulk", "usuarios"] }
+          },
+          "response": [
+            {
+              "name": "Cargar Usuarios - Example",
+              "originalRequest": {
+                "method": "POST",
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "file",
+                      "type": "file",
+                      "src": ""
+                    }
+                  ]
+                },
+                "url": { "raw": "{{baseUrl}}/api/bulk/usuarios", "host": ["{{baseUrl}}"], "path": ["api", "bulk", "usuarios"] }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "body": "{\n  \"totalProcesados\": 10,\n  \"exitosos\": 8,\n  \"fallidos\": 2,\n  \"errores\": [\"Fila 3: El correo 'juan@email.com' ya está registrado\"]\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get Plantilla Temas",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/bulk/temas/plantilla", "host": ["{{baseUrl}}"], "path": ["api", "bulk", "temas", "plantilla"] }
+          }
+        },
+        {
+          "name": "Cargar Temas",
+          "request": {
+            "method": "POST",
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "file",
+                  "type": "file",
+                  "src": ""
+                }
+              ]
+            },
+            "url": { "raw": "{{baseUrl}}/api/bulk/temas", "host": ["{{baseUrl}}"], "path": ["api", "bulk", "temas"] }
+          },
+          "response": [
+            {
+              "name": "Cargar Temas - Example",
+              "originalRequest": {
+                "method": "POST",
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "file",
+                      "type": "file",
+                      "src": ""
+                    }
+                  ]
+                },
+                "url": { "raw": "{{baseUrl}}/api/bulk/temas", "host": ["{{baseUrl}}"], "path": ["api", "bulk", "temas"] }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "body": "{\n  \"totalProcesados\": 10,\n  \"exitosos\": 8,\n  \"fallidos\": 2,\n  \"errores\": [\"Fila 3: El correo 'juan@email.com' ya está registrado\"]\n}"
+            }
+          ]
+        }
+      ]
     }
   ]
 }

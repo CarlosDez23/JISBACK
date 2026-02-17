@@ -180,6 +180,9 @@ Elimina una comunidad.
 
 > Requiere autenticacion en todos los endpoints.
 
+### GET `/api/materias/mis-materias`
+Obtiene las materias de la comunidad del usuario autenticado.
+
 ### GET `/api/materias`
 Lista todas las materias.
 
@@ -695,6 +698,53 @@ Cambia el estado de una incidencia.
   "estado": "EN_PROGRESO"
 }
 ```
+
+---
+
+## 14. Carga Masiva (Excel)
+
+> Requiere autenticacion en todos los endpoints.
+
+### GET `/api/bulk/usuarios/plantilla`
+Descarga la plantilla Excel para carga masiva de usuarios.
+
+**Response:** Archivo Excel (.xlsx) con columnas: Nombre, Apellidos, Correo Electronico, Es Administrador (desplegable Si/No), Comunidad (desplegable con comunidades disponibles).
+
+### POST `/api/bulk/usuarios`
+Procesa el Excel de usuarios relleno y da de alta los usuarios.
+
+**Content-Type:** `multipart/form-data`
+**Body:** campo `file` con el archivo .xlsx
+
+**Response 200:**
+```json
+{
+  "totalProcesados": 10,
+  "exitosos": 8,
+  "fallidos": 2,
+  "errores": [
+    "Fila 3: El correo 'juan@email.com' ya esta registrado",
+    "Fila 7: Comunidad 'Inexistente' no encontrada"
+  ]
+}
+```
+
+> Los usuarios se crean con password `password` y `passwordChangeRequired: true`.
+
+### GET `/api/bulk/temas/plantilla`
+Descarga la plantilla Excel para carga de un tema con preguntas. Las materias del desplegable son las de la comunidad del usuario autenticado.
+
+**Response:** Archivo Excel (.xlsx) con 2 hojas:
+- **Hoja "Tema":** Nombre del Tema, Materia (desplegable con materias de la comunidad).
+- **Hoja "Preguntas":** Enunciado, Respuesta 1, Correcta 1, Explicacion 1, Respuesta 2, Correcta 2, Explicacion 2, Respuesta 3, Correcta 3, Explicacion 3, Respuesta 4, Correcta 4, Explicacion 4.
+
+### POST `/api/bulk/temas`
+Procesa el Excel de tema relleno y da de alta el tema con sus preguntas y respuestas.
+
+**Content-Type:** `multipart/form-data`
+**Body:** campo `file` con el archivo .xlsx
+
+**Response 200:** Mismo formato `BulkLoadResult` que la carga de usuarios.
 
 ---
 
