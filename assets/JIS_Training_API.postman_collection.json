@@ -1,0 +1,832 @@
+{
+  "info": {
+    "name": "JIS Training API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080"
+    },
+    {
+      "key": "token",
+      "value": ""
+    }
+  ],
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var json = pm.response.json();",
+                  "if (json.token) {",
+                  "    pm.collectionVariables.set('token', json.token);",
+                  "    pm.collectionVariables.set('userId', json.userId);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"correoElectronico\": \"usuario@email.com\",\n  \"password\": \"123456\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/auth/login", "host": ["{{baseUrl}}"], "path": ["api", "auth", "login"] }
+          }
+        },
+        {
+          "name": "Register",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var json = pm.response.json();",
+                  "if (json.token) {",
+                  "    pm.collectionVariables.set('token', json.token);",
+                  "    pm.collectionVariables.set('userId', json.userId);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Juan\",\n  \"apellidos\": \"Garcia\",\n  \"correoElectronico\": \"juan@email.com\",\n  \"password\": \"123456\",\n  \"comunidadId\": 1,\n  \"isAdmin\": false\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/auth/register", "host": ["{{baseUrl}}"], "path": ["api", "auth", "register"] }
+          }
+        },
+        {
+          "name": "Change Password",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"newPassword\": \"nuevaPassword123\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/auth/change-password", "host": ["{{baseUrl}}"], "path": ["api", "auth", "change-password"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Usuarios",
+      "item": [
+        {
+          "name": "Get All Usuarios",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/usuarios", "host": ["{{baseUrl}}"], "path": ["api", "usuarios"] }
+          }
+        },
+        {
+          "name": "Get Usuario by ID",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/usuarios/1", "host": ["{{baseUrl}}"], "path": ["api", "usuarios", "1"] }
+          }
+        },
+        {
+          "name": "Get Usuario by Email",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/usuarios/email/usuario@email.com", "host": ["{{baseUrl}}"], "path": ["api", "usuarios", "email", "usuario@email.com"] }
+          }
+        },
+        {
+          "name": "Get Usuarios by Comunidad",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/usuarios/comunidad/1", "host": ["{{baseUrl}}"], "path": ["api", "usuarios", "comunidad", "1"] }
+          }
+        },
+        {
+          "name": "Create Usuario",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Ana\",\n  \"apellidos\": \"Lopez\",\n  \"correoElectronico\": \"ana@email.com\",\n  \"userPassword\": \"123456\",\n  \"isAdmin\": false,\n  \"passwordChangeRequired\": true,\n  \"comunidad\": { \"id\": 1 }\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/usuarios", "host": ["{{baseUrl}}"], "path": ["api", "usuarios"] }
+          }
+        },
+        {
+          "name": "Update Usuario",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Ana\",\n  \"apellidos\": \"Lopez Perez\",\n  \"correoElectronico\": \"ana@email.com\",\n  \"comunidadId\": 1,\n  \"isAdmin\": false\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/usuarios/1", "host": ["{{baseUrl}}"], "path": ["api", "usuarios", "1"] }
+          }
+        },
+        {
+          "name": "Delete Usuario",
+          "request": {
+            "method": "DELETE",
+            "url": { "raw": "{{baseUrl}}/api/usuarios/1", "host": ["{{baseUrl}}"], "path": ["api", "usuarios", "1"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Comunidades",
+      "item": [
+        {
+          "name": "Get All Comunidades",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/comunidades", "host": ["{{baseUrl}}"], "path": ["api", "comunidades"] }
+          }
+        },
+        {
+          "name": "Get Comunidad by ID",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/comunidades/1", "host": ["{{baseUrl}}"], "path": ["api", "comunidades", "1"] }
+          }
+        },
+        {
+          "name": "Create Comunidad",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombreComunidad\": \"Madrid\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/comunidades", "host": ["{{baseUrl}}"], "path": ["api", "comunidades"] }
+          }
+        },
+        {
+          "name": "Update Comunidad",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombreComunidad\": \"Madrid Actualizada\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/comunidades/1", "host": ["{{baseUrl}}"], "path": ["api", "comunidades", "1"] }
+          }
+        },
+        {
+          "name": "Delete Comunidad",
+          "request": {
+            "method": "DELETE",
+            "url": { "raw": "{{baseUrl}}/api/comunidades/1", "host": ["{{baseUrl}}"], "path": ["api", "comunidades", "1"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Materias",
+      "item": [
+        {
+          "name": "Get All Materias",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/materias", "host": ["{{baseUrl}}"], "path": ["api", "materias"] }
+          }
+        },
+        {
+          "name": "Get Materia by ID",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/materias/1", "host": ["{{baseUrl}}"], "path": ["api", "materias", "1"] }
+          }
+        },
+        {
+          "name": "Create Materia",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"materiaNombre\": \"Derecho Civil\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/materias", "host": ["{{baseUrl}}"], "path": ["api", "materias"] }
+          }
+        },
+        {
+          "name": "Update Materia",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"materiaNombre\": \"Derecho Civil Actualizado\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/materias/1", "host": ["{{baseUrl}}"], "path": ["api", "materias", "1"] }
+          }
+        },
+        {
+          "name": "Delete Materia",
+          "request": {
+            "method": "DELETE",
+            "url": { "raw": "{{baseUrl}}/api/materias/1", "host": ["{{baseUrl}}"], "path": ["api", "materias", "1"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Topics",
+      "item": [
+        {
+          "name": "Get All Topics",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/topics", "host": ["{{baseUrl}}"], "path": ["api", "topics"] }
+          }
+        },
+        {
+          "name": "Get Topic by ID",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/topics/1", "host": ["{{baseUrl}}"], "path": ["api", "topics", "1"] }
+          }
+        },
+        {
+          "name": "Get Topics by Materia",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/topics/by-materia/1", "host": ["{{baseUrl}}"], "path": ["api", "topics", "by-materia", "1"] }
+          }
+        },
+        {
+          "name": "Get Question Count for Topic",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/topics/1/questions/count", "host": ["{{baseUrl}}"], "path": ["api", "topics", "1", "questions", "count"] }
+          }
+        },
+        {
+          "name": "Create Topic",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"topicName\": \"Obligaciones\",\n  \"materia\": { \"id\": 1 }\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/topics", "host": ["{{baseUrl}}"], "path": ["api", "topics"] }
+          }
+        },
+        {
+          "name": "Update Topic",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"topicName\": \"Obligaciones Actualizado\",\n  \"materia\": { \"id\": 1 }\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/topics/1", "host": ["{{baseUrl}}"], "path": ["api", "topics", "1"] }
+          }
+        },
+        {
+          "name": "Delete Topic",
+          "request": {
+            "method": "DELETE",
+            "url": { "raw": "{{baseUrl}}/api/topics/1", "host": ["{{baseUrl}}"], "path": ["api", "topics", "1"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Questions",
+      "item": [
+        {
+          "name": "Get All Questions",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/questions", "host": ["{{baseUrl}}"], "path": ["api", "questions"] }
+          }
+        },
+        {
+          "name": "Get Question by ID",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/questions/1", "host": ["{{baseUrl}}"], "path": ["api", "questions", "1"] }
+          }
+        },
+        {
+          "name": "Get Questions by Topic",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/questions/by-topic/1", "host": ["{{baseUrl}}"], "path": ["api", "questions", "by-topic", "1"] }
+          }
+        },
+        {
+          "name": "Get Questions by Materia",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/questions/by-materia/1", "host": ["{{baseUrl}}"], "path": ["api", "questions", "by-materia", "1"] }
+          }
+        },
+        {
+          "name": "Create Question",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"questionText\": \"Cual es el plazo general de prescripcion?\",\n  \"topic\": { \"id\": 1 },\n  \"answers\": [\n    {\n      \"answerText\": \"5 anos\",\n      \"isCorrect\": true,\n      \"explanation\": \"Art. 1964 CC\"\n    },\n    {\n      \"answerText\": \"10 anos\",\n      \"isCorrect\": false,\n      \"explanation\": \"Plazo anterior a la reforma\"\n    },\n    {\n      \"answerText\": \"15 anos\",\n      \"isCorrect\": false,\n      \"explanation\": \"No existe este plazo\"\n    },\n    {\n      \"answerText\": \"3 anos\",\n      \"isCorrect\": false,\n      \"explanation\": \"Es plazo de acciones personales\"\n    }\n  ]\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/questions", "host": ["{{baseUrl}}"], "path": ["api", "questions"] }
+          }
+        },
+        {
+          "name": "Update Question",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"questionText\": \"Texto actualizado\",\n  \"answers\": [\n    {\n      \"id\": 1,\n      \"answerText\": \"Respuesta actualizada\",\n      \"isCorrect\": true,\n      \"explanation\": \"Explicacion\"\n    }\n  ]\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/questions/1", "host": ["{{baseUrl}}"], "path": ["api", "questions", "1"] }
+          }
+        },
+        {
+          "name": "Generate Quiz",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"topicIds\": [1, 2, 3],\n  \"numberOfQuestions\": 20\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/questions/generate-quiz", "host": ["{{baseUrl}}"], "path": ["api", "questions", "generate-quiz"] }
+          }
+        },
+        {
+          "name": "Delete Question",
+          "request": {
+            "method": "DELETE",
+            "url": { "raw": "{{baseUrl}}/api/questions/1", "host": ["{{baseUrl}}"], "path": ["api", "questions", "1"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Answers",
+      "item": [
+        {
+          "name": "Get All Answers",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/answers", "host": ["{{baseUrl}}"], "path": ["api", "answers"] }
+          }
+        },
+        {
+          "name": "Get Answer by ID",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/answers/1", "host": ["{{baseUrl}}"], "path": ["api", "answers", "1"] }
+          }
+        },
+        {
+          "name": "Get Answers by Question",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/answers/by-question/1", "host": ["{{baseUrl}}"], "path": ["api", "answers", "by-question", "1"] }
+          }
+        },
+        {
+          "name": "Create Answer",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"answerText\": \"Respuesta de ejemplo\",\n  \"isCorrect\": true,\n  \"explanation\": \"Explicacion\",\n  \"question\": { \"id\": 1 }\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/answers", "host": ["{{baseUrl}}"], "path": ["api", "answers"] }
+          }
+        },
+        {
+          "name": "Update Answer",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"answerText\": \"Respuesta actualizada\",\n  \"isCorrect\": false,\n  \"explanation\": \"Nueva explicacion\",\n  \"question\": { \"id\": 1 }\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/answers/1", "host": ["{{baseUrl}}"], "path": ["api", "answers", "1"] }
+          }
+        },
+        {
+          "name": "Delete Answer",
+          "request": {
+            "method": "DELETE",
+            "url": { "raw": "{{baseUrl}}/api/answers/1", "host": ["{{baseUrl}}"], "path": ["api", "answers", "1"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Simulacros",
+      "item": [
+        {
+          "name": "Get All Simulacros",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/simulacros", "host": ["{{baseUrl}}"], "path": ["api", "simulacros"] }
+          }
+        },
+        {
+          "name": "Get Simulacro by ID",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/simulacros/1", "host": ["{{baseUrl}}"], "path": ["api", "simulacros", "1"] }
+          }
+        },
+        {
+          "name": "Create Simulacro",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombreSimulacro\": \"Simulacro Civil 1\",\n  \"comunidadId\": 1,\n  \"materiaId\": 1,\n  \"tiempoLimiteSegundos\": 3600,\n  \"preguntaIds\": [1, 2, 3, 4, 5]\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/simulacros", "host": ["{{baseUrl}}"], "path": ["api", "simulacros"] }
+          }
+        },
+        {
+          "name": "Generate Simulacro",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombreSimulacro\": \"Simulacro Aleatorio\",\n  \"comunidadId\": 1,\n  \"materiaId\": 1,\n  \"tiempoLimiteSegundos\": 3600,\n  \"preguntasPorTema\": {\n    \"1\": 10,\n    \"2\": 15,\n    \"3\": 5\n  }\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/simulacros/generate", "host": ["{{baseUrl}}"], "path": ["api", "simulacros", "generate"] }
+          }
+        },
+        {
+          "name": "Update Simulacro",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombreSimulacro\": \"Simulacro Actualizado\",\n  \"tiempoLimiteSegundos\": 7200\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/simulacros/1", "host": ["{{baseUrl}}"], "path": ["api", "simulacros", "1"] }
+          }
+        },
+        {
+          "name": "Delete Simulacro",
+          "request": {
+            "method": "DELETE",
+            "url": { "raw": "{{baseUrl}}/api/simulacros/1", "host": ["{{baseUrl}}"], "path": ["api", "simulacros", "1"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Simulacro Preguntas",
+      "item": [
+        {
+          "name": "Get All Simulacro Preguntas",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/simulacro-preguntas", "host": ["{{baseUrl}}"], "path": ["api", "simulacro-preguntas"] }
+          }
+        },
+        {
+          "name": "Get Simulacro Pregunta by ID",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/simulacro-preguntas/1", "host": ["{{baseUrl}}"], "path": ["api", "simulacro-preguntas", "1"] }
+          }
+        },
+        {
+          "name": "Get Preguntas by Simulacro",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/simulacro-preguntas/by-simulacro/1", "host": ["{{baseUrl}}"], "path": ["api", "simulacro-preguntas", "by-simulacro", "1"] }
+          }
+        },
+        {
+          "name": "Create Simulacro Pregunta",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"simulacro\": { \"id\": 1 },\n  \"question\": { \"id\": 1 },\n  \"orden\": 1\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/simulacro-preguntas", "host": ["{{baseUrl}}"], "path": ["api", "simulacro-preguntas"] }
+          }
+        },
+        {
+          "name": "Update Simulacro Pregunta",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"simulacro\": { \"id\": 1 },\n  \"question\": { \"id\": 2 },\n  \"orden\": 2\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/simulacro-preguntas/1", "host": ["{{baseUrl}}"], "path": ["api", "simulacro-preguntas", "1"] }
+          }
+        },
+        {
+          "name": "Delete Pregunta from Simulacro",
+          "request": {
+            "method": "DELETE",
+            "url": { "raw": "{{baseUrl}}/api/simulacro-preguntas/simulacro/1/pregunta/1", "host": ["{{baseUrl}}"], "path": ["api", "simulacro-preguntas", "simulacro", "1", "pregunta", "1"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "User Answers",
+      "item": [
+        {
+          "name": "Get All User Answers",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/user-answers", "host": ["{{baseUrl}}"], "path": ["api", "user-answers"] }
+          }
+        },
+        {
+          "name": "Get User Answer by ID",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/user-answers/1", "host": ["{{baseUrl}}"], "path": ["api", "user-answers", "1"] }
+          }
+        },
+        {
+          "name": "Get Answers by Usuario",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/user-answers/usuario/1", "host": ["{{baseUrl}}"], "path": ["api", "user-answers", "usuario", "1"] }
+          }
+        },
+        {
+          "name": "Get Answers by Question",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/user-answers/question/1", "host": ["{{baseUrl}}"], "path": ["api", "user-answers", "question", "1"] }
+          }
+        },
+        {
+          "name": "Create User Answer",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"usuario\": { \"id\": 1 },\n  \"question\": { \"id\": 1 },\n  \"answer\": { \"id\": 1 },\n  \"isCorrect\": true\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/user-answers", "host": ["{{baseUrl}}"], "path": ["api", "user-answers"] }
+          }
+        },
+        {
+          "name": "Submit Test",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"usuarioId\": 1,\n  \"respuestas\": [\n    {\n      \"questionId\": 1,\n      \"answerId\": 3,\n      \"isCorrect\": true\n    },\n    {\n      \"questionId\": 2,\n      \"answerId\": 7,\n      \"isCorrect\": false\n    }\n  ]\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/user-answers/submit-test", "host": ["{{baseUrl}}"], "path": ["api", "user-answers", "submit-test"] }
+          }
+        },
+        {
+          "name": "Delete User Answer",
+          "request": {
+            "method": "DELETE",
+            "url": { "raw": "{{baseUrl}}/api/user-answers/1", "host": ["{{baseUrl}}"], "path": ["api", "user-answers", "1"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Stats",
+      "item": [
+        {
+          "name": "Get Stats by Topic",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/stats/topic/usuario/1", "host": ["{{baseUrl}}"], "path": ["api", "stats", "topic", "usuario", "1"] }
+          }
+        },
+        {
+          "name": "Get Stats by Materia",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/stats/materia/usuario/1", "host": ["{{baseUrl}}"], "path": ["api", "stats", "materia", "usuario", "1"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Avisos",
+      "item": [
+        {
+          "name": "Get All Avisos",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/avisos", "host": ["{{baseUrl}}"], "path": ["api", "avisos"] }
+          }
+        },
+        {
+          "name": "Get Aviso by ID",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/avisos/1", "host": ["{{baseUrl}}"], "path": ["api", "avisos", "1"] }
+          }
+        },
+        {
+          "name": "Get Mis Avisos",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/avisos/mis-avisos", "host": ["{{baseUrl}}"], "path": ["api", "avisos", "mis-avisos"] }
+          }
+        },
+        {
+          "name": "Get Avisos by Comunidad",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/avisos/comunidad/1", "host": ["{{baseUrl}}"], "path": ["api", "avisos", "comunidad", "1"] }
+          }
+        },
+        {
+          "name": "Get Avisos Generales",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/avisos/generales", "host": ["{{baseUrl}}"], "path": ["api", "avisos", "generales"] }
+          }
+        },
+        {
+          "name": "Get Avisos Activos",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/avisos/activos", "host": ["{{baseUrl}}"], "path": ["api", "avisos", "activos"] }
+          }
+        },
+        {
+          "name": "Create Aviso",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tituloAviso\": \"Mantenimiento programado\",\n  \"cuerpoAviso\": \"El sistema estara en mantenimiento el sabado de 22:00 a 02:00\",\n  \"comunidadId\": 1,\n  \"activo\": true\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/avisos", "host": ["{{baseUrl}}"], "path": ["api", "avisos"] }
+          }
+        },
+        {
+          "name": "Update Aviso",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tituloAviso\": \"Aviso actualizado\",\n  \"cuerpoAviso\": \"Contenido actualizado\",\n  \"comunidadId\": 1,\n  \"activo\": true\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/avisos/1", "host": ["{{baseUrl}}"], "path": ["api", "avisos", "1"] }
+          }
+        },
+        {
+          "name": "Toggle Activo",
+          "request": {
+            "method": "PATCH",
+            "url": { "raw": "{{baseUrl}}/api/avisos/1/toggle-activo", "host": ["{{baseUrl}}"], "path": ["api", "avisos", "1", "toggle-activo"] }
+          }
+        },
+        {
+          "name": "Delete Aviso",
+          "request": {
+            "method": "DELETE",
+            "url": { "raw": "{{baseUrl}}/api/avisos/1", "host": ["{{baseUrl}}"], "path": ["api", "avisos", "1"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Incidencias",
+      "item": [
+        {
+          "name": "Get Mis Incidencias",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/incidencias/mis-incidencias", "host": ["{{baseUrl}}"], "path": ["api", "incidencias", "mis-incidencias"] }
+          }
+        },
+        {
+          "name": "Get Mis Novedades",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/incidencias/mis-novedades", "host": ["{{baseUrl}}"], "path": ["api", "incidencias", "mis-novedades"] }
+          }
+        },
+        {
+          "name": "Get Incidencia by ID",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/incidencias/1", "host": ["{{baseUrl}}"], "path": ["api", "incidencias", "1"] }
+          }
+        },
+        {
+          "name": "Create Incidencia",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"titulo\": \"Error en quiz\",\n  \"descripcion\": \"Al generar quiz de 50 preguntas da error 500\",\n  \"imagenUrl\": \"https://ejemplo.com/screenshot.png\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/incidencias", "host": ["{{baseUrl}}"], "path": ["api", "incidencias"] }
+          }
+        },
+        {
+          "name": "Add Comentario",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"texto\": \"He probado de nuevo y sigue fallando\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/incidencias/1/comentarios", "host": ["{{baseUrl}}"], "path": ["api", "incidencias", "1", "comentarios"] }
+          }
+        },
+        {
+          "name": "Delete Incidencia",
+          "request": {
+            "method": "DELETE",
+            "url": { "raw": "{{baseUrl}}/api/incidencias/1", "host": ["{{baseUrl}}"], "path": ["api", "incidencias", "1"] }
+          }
+        },
+        {
+          "name": "[Admin] Get Todas las Incidencias",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/incidencias/admin/todas", "host": ["{{baseUrl}}"], "path": ["api", "incidencias", "admin", "todas"] }
+          }
+        },
+        {
+          "name": "[Admin] Get Incidencias by Estado",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/incidencias/admin/estado/CREADA", "host": ["{{baseUrl}}"], "path": ["api", "incidencias", "admin", "estado", "CREADA"] }
+          }
+        },
+        {
+          "name": "[Admin] Cambiar Estado",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"estado\": \"EN_PROGRESO\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/incidencias/admin/1/estado", "host": ["{{baseUrl}}"], "path": ["api", "incidencias", "admin", "1", "estado"] }
+          }
+        }
+      ]
+    }
+  ]
+}
