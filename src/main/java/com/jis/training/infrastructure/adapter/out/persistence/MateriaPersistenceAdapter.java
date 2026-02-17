@@ -41,4 +41,10 @@ public class MateriaPersistenceAdapter implements PersistencePort<Materia, Integ
     public void deleteById(Integer id) {
         repository.deleteById(id);
     }
+
+    public List<Materia> findByComunidadId(Integer comunidadId) {
+        return repository.findByComunidadId(comunidadId).stream()
+                .map(mapper::toDomain)
+                .collect(Collectors.toList());
+    }
 }
