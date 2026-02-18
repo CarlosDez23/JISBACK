@@ -49,4 +49,11 @@ public class AnswerPersistenceAdapter implements PersistencePort<Answer, Long>, 
                 .map(mapper::toDomain)
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public void deleteByQuestionIds(List<Long> questionIds) {
+        if (!questionIds.isEmpty()) {
+            repository.deleteByQuestionIdIn(questionIds);
+        }
+    }
 }

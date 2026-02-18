@@ -6,4 +6,5 @@ import java.util.List;
 
 public interface AnswerRepositoryPort {
     List<Answer> findByQuestionId(Long questionId);
+    void deleteByQuestionIds(List<Long> questionIds);
 }

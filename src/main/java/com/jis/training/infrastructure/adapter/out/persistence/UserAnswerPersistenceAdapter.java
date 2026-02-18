@@ -66,4 +66,11 @@ public class UserAnswerPersistenceAdapter implements PersistencePort<UserAnswer,
                 .map(mapper::toDomain)
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public void deleteByQuestionIds(List<Long> questionIds) {
+        if (!questionIds.isEmpty()) {
+            repository.deleteByQuestionIdIn(questionIds);
+        }
+    }
 }

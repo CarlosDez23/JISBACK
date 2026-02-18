@@ -10,4 +10,5 @@ public interface QuestionRepositoryPort {
     List<Question> findByTopicId(Long topicId);
     List<Answer> findAnswersByQuestionIds(List<Long> questionIds);
     long countByTopicId(Long topicId);
+    void deleteByTopicId(Long topicId);
 }

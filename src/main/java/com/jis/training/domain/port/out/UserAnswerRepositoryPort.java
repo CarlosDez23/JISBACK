@@ -8,4 +8,5 @@ public interface UserAnswerRepositoryPort {
     List<UserAnswer> findByUsuarioId(Long usuarioId);
     List<UserAnswer> findByQuestionId(Long questionId);
     List<UserAnswer> saveAll(List<UserAnswer> answers);
+    void deleteByQuestionIds(List<Long> questionIds);
 }

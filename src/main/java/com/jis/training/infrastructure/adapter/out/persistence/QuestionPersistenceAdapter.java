@@ -73,4 +73,9 @@ public class QuestionPersistenceAdapter implements PersistencePort<Question, Lon
     public long countByTopicId(Long topicId) {
         return repository.countByTopicId(topicId);
     }
+
+    @Override
+    public void deleteByTopicId(Long topicId) {
+        repository.deleteByTopicId(topicId);
+    }
 }
