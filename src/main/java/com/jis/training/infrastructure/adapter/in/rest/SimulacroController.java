@@ -44,6 +44,7 @@ public class SimulacroController {
         Simulacro simulacro = new Simulacro();
         simulacro.setNombreSimulacro(request.nombreSimulacro());
         simulacro.setTiempoLimiteSegundos(request.tiempoLimiteSegundos());
+        simulacro.setTipoPenalizacion(request.tipoPenalizacion());
 
         if (request.comunidadId() != null) {
             Comunidad comunidad = new Comunidad();
@@ -79,6 +80,7 @@ public class SimulacroController {
         Simulacro simulacro = new Simulacro();
         simulacro.setNombreSimulacro(request.nombreSimulacro());
         simulacro.setTiempoLimiteSegundos(request.tiempoLimiteSegundos());
+        simulacro.setTipoPenalizacion(request.tipoPenalizacion());
 
         if (request.comunidadId() != null) {
             Comunidad comunidad = new Comunidad();

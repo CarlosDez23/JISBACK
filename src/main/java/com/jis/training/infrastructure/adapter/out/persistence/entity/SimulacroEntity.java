@@ -1,5 +1,6 @@
 package com.jis.training.infrastructure.adapter.out.persistence.entity;
 
+import com.jis.training.domain.model.TipoPenalizacion;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -24,4 +25,8 @@ public class SimulacroEntity {
 
     @Column(name = "tiempo_limite_segundos")
     private Integer tiempoLimiteSegundos;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "tipo_penalizacion")
+    private TipoPenalizacion tipoPenalizacion;
 }

@@ -9,4 +9,5 @@ public class Simulacro {
     private Comunidad comunidad;
     private Materia materia;
     private Integer tiempoLimiteSegundos;
+    private TipoPenalizacion tipoPenalizacion;
 }
